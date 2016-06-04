@@ -1,0 +1,145 @@
+<html>
+<p><b>PONG</b></p>
+
+<canvas id="GameCanvas" width="800" height="600"></canvas>
+
+<script>
+var canvas;
+var canvasContext;
+var ballX=400;
+var ballY=300;
+var ballVX=-10;
+var ballVY=-4;
+var PCY=200;
+var PlayerY=200;
+var PlayerVY=0;
+var Score1=0;
+var Score2=0;
+var HEIGHT=100;
+var WIDTH=10;
+
+function calcMousePos(evt) // evt=event (mouse movement)
+{	var rect=canvas.getBoundingClientRect();
+	var root= document.documentElement;
+	var mouseX = evt.clientX - rect.left - root.scrollLeft;
+	var mouseY = evt.clientY - rect.top - root.scrollTop;
+	return{x:mouseX, y:mouseY};
+}
+
+window.onload=function(){
+	console.log("hello World!");
+	canvas = document.getElementById('GameCanvas');
+	canvasContext= canvas.getContext('2d');
+	drawCanvas();		
+	setInterval(function(){moveEverything();drawEverything();},50);
+
+	canvas.addEventListener('mousemove',function(evt){var mousePos= calcMousePos(evt);PlayerY=mousePos.y-(HEIGHT/2);});
+	
+}
+
+
+function drawCanvas()
+	{canvasContext.fillStyle='black';
+	 canvasContext.fillRect(0,0,canvas.width,canvas.height);
+	 for(var i=0; i<canvas.height;i+=40)
+		{drawRect(canvas.width/2,i,2,20,'white');}
+	}
+
+function drawBall(X,Y,Radius,Begin,End,C)
+	{canvasContext.fillStyle=C;
+	canvasContext.beginPath();
+	canvasContext.arc(X,Y,Radius,0,Math.PI*2,true);
+	canvasContext.fill();
+	}
+
+function drawRect(X,Y,W,H,C)
+	{canvasContext.fillStyle=C;
+	canvasContext.fillRect(X,Y,W,H);}
+
+function ballReset()
+	{ballX=canvas.width/2;ballY=canvas.height/2;
+	ballVX=-ballVX;
+	ballVY=-ballVY;}
+
+function moveBall()
+	{ 
+		if(ballX<40)
+			{if(ballY>PlayerY && ballY<(PlayerY+HEIGHT	))
+				{ballVX=-ballVX;
+				 ballVY= (ballY-(PlayerY+HEIGHT/2))*0.35;	
+				}
+			else
+			 	{Score2+=1;
+				 ballReset();}
+			}
+	        else if(ballX>canvas.width-30)
+			{if(ballY>PCY && ballY<(PCY+HEIGHT))
+				{ballVY= (ballY-(PCY+HEIGHT/2))*0.35;
+				ballVX=-ballVX;}
+			 else
+				{Score1+=1;
+				 ballReset();}
+			}
+
+		else if(ballY<0||ballY>canvas.height-5)
+			{ballVY=-ballVY;
+			}
+		
+		ballX=ballX+ballVX;
+		ballY=ballY+ballVY;
+			
+	 	
+	}
+function movePC()
+	{if((PCY+HEIGHT/2)<ballY-35)
+		PCY=PCY+5;
+	 else if((PCY+HEIGHT/2)>ballY+35)
+		PCY=PCY-5;	
+	}
+
+
+function moveEverything()
+	{moveBall();
+	 movePC();		
+	}
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
+function scoring()
+{
+ var game=1;
+ if(Score1==3)
+	{drawCanvas();
+	canvasContext.fillStyle='white'	;
+	canvasContext.fillText("Player wins!",300,300);Score1=Score2=0;
+	game++;
+        }
+ else if(Score2==3)
+	{drawCanvas();
+	canvasContext.fillStyle='white'
+	canvasContext.fillText("AI wins!",320,300);Score1=Score2=0;HEIGHT-=5;game++;}
+ canvasContext.fillText(Score1,100,100);
+ canvasContext.fillText(Score2,700,100);
+	
+ }
+
+
+function drawEverything()
+	{
+	console.log("X="+ballX+" Y="+ballY);
+	drawCanvas();
+	drawRect(25,PlayerY,WIDTH,HEIGHT,'white');//player
+	drawRect(canvas.width-30,PCY,WIDTH,HEIGHT,'white');//PC
+	drawBall(ballX,ballY,10,'white');//ball
+	scoring();
+  	}
+
+</script>
+
+</html>
