@@ -105,14 +105,6 @@ function moveEverything()
 	{moveBall();
 	 movePC();		
 	}
-function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
-}
 
 function scoring()
 {
@@ -121,7 +113,7 @@ function scoring()
 	{drawCanvas();
 	canvasContext.fillStyle='white'	;
 	canvasContext.fillText("Player wins!",300,300);Score1=Score2=0;
-	if(HEIGHT<50)HEIGHT+=5;
+	if(HEIGHT<50)Height+=5;
 	game++;
         }
  else if(Score2==3)
