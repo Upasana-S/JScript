@@ -121,6 +121,7 @@ function scoring()
 	{drawCanvas();
 	canvasContext.fillStyle='white'	;
 	canvasContext.fillText("Player wins!",300,300);Score1=Score2=0;
+	if(HEIGHT<50)HEIGHT+=5;
 	game++;
         }
  else if(Score2==3)
